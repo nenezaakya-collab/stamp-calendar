@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { X, Plus, RotateCcw, Pencil, Check } from 'lucide-react'
 import { DEFAULT_STAMPS } from '../constants/defaultStamps'
 import { useTheme } from '../contexts/ThemeContext'
+import ModalBase from './ModalBase'
 
 export default function StampManager({ stamps, onUpdate, onClose }) {
   const { theme } = useTheme()
@@ -10,10 +11,6 @@ export default function StampManager({ stamps, onUpdate, onClose }) {
   const [newEmoji, setNewEmoji] = useState('')
   const [newLabel, setNewLabel] = useState('')
   const [showAddForm, setShowAddForm] = useState(false)
-
-  const handleBackdropClick = (e) => {
-    if (e.target === e.currentTarget) onClose()
-  }
 
   const startEdit = (stamp) => {
     setEditingId(stamp.id)
@@ -48,24 +45,11 @@ export default function StampManager({ stamps, onUpdate, onClose }) {
 
   const isDefault = (id) => DEFAULT_STAMPS.some(s => s.id === id)
 
-  // ボタンの補助色（アイコンボタン用）
-  // テーマごとに適切な値があるが、subを薄くした色として扱う
-  const iconBtnBg = theme.bg
-  const iconBtnColor = theme.textMuted
-
   return (
-    <div
-      className="fixed inset-0 flex items-end sm:items-center justify-center z-50 p-4"
-      style={{ backgroundColor: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(4px)' }}
-      onClick={handleBackdropClick}
-    >
+    <ModalBase onClose={onClose}>
       <div
         className="w-full max-w-md rounded-3xl relative flex flex-col"
-        style={{
-          backgroundColor: theme.cardBg,
-          boxShadow: theme.modalShadow,
-          maxHeight: '88vh',
-        }}
+        style={{ backgroundColor: theme.cardBg, boxShadow: theme.modalShadow, maxHeight: '88vh' }}
       >
         {/* ヘッダー */}
         <div className="flex items-center justify-between px-6 pt-6 pb-4 flex-shrink-0">
@@ -136,7 +120,7 @@ export default function StampManager({ stamps, onUpdate, onClose }) {
                   <button
                     onClick={() => startEdit(stamp)}
                     className="w-8 h-8 flex items-center justify-center rounded-xl flex-shrink-0"
-                    style={{ backgroundColor: iconBtnBg, color: iconBtnColor }}
+                    style={{ backgroundColor: theme.bg, color: theme.textMuted }}
                   >
                     <Pencil size={14} />
                   </button>
@@ -145,7 +129,7 @@ export default function StampManager({ stamps, onUpdate, onClose }) {
                 <button
                   onClick={() => deleteStamp(stamp.id)}
                   className="w-8 h-8 flex items-center justify-center rounded-xl flex-shrink-0"
-                  style={{ backgroundColor: iconBtnBg, color: theme.sun }}
+                  style={{ backgroundColor: theme.bg, color: theme.sun }}
                 >
                   <X size={14} />
                 </button>
@@ -155,7 +139,10 @@ export default function StampManager({ stamps, onUpdate, onClose }) {
         </div>
 
         {/* フッター */}
-        <div className="px-6 pb-6 pt-3 flex-shrink-0" style={{ borderTop: `1px solid ${theme.bg}` }}>
+        <div
+          className="px-6 pb-6 pt-3 flex-shrink-0"
+          style={{ borderTop: `1px solid ${theme.bg}` }}
+        >
           {showAddForm ? (
             <div className="rounded-2xl p-4 mb-3" style={{ backgroundColor: theme.bg }}>
               <p className="text-xs font-medium mb-3" style={{ color: theme.textMuted }}>
@@ -194,7 +181,7 @@ export default function StampManager({ stamps, onUpdate, onClose }) {
                 <button
                   onClick={() => setShowAddForm(false)}
                   className="flex-1 py-2 rounded-xl text-sm font-medium"
-                  style={{ backgroundColor: iconBtnBg, color: theme.textPrimary }}
+                  style={{ backgroundColor: theme.bg, color: theme.textPrimary }}
                 >
                   キャンセル
                 </button>
@@ -238,6 +225,6 @@ export default function StampManager({ stamps, onUpdate, onClose }) {
           </button>
         </div>
       </div>
-    </div>
+    </ModalBase>
   )
 }

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { X, Download, Share } from 'lucide-react'
 import { useTheme } from '../contexts/ThemeContext'
+import ModalBase from './ModalBase'
 
 /** iOS Safari かどうか判定 */
 const isIOS = () =>
@@ -24,17 +25,14 @@ export default function InstallPrompt() {
   )
 
   useEffect(() => {
-    // 既にインストール済みなら何もしない
     if (isStandalone()) return
 
     if (isIOS()) {
-      // iOS: sessionStorage に閉じた記録がなければ短時間後に案内を表示
       if (!dismissed) {
         const t = setTimeout(() => setShowIOSGuide(true), 3000)
         return () => clearTimeout(t)
       }
     } else {
-      // Android/Chrome: beforeinstallprompt をキャプチャ
       const handler = (e) => {
         e.preventDefault()
         setDeferredPrompt(e)
@@ -64,10 +62,7 @@ export default function InstallPrompt() {
     return (
       <div
         className="fixed bottom-4 left-0 right-0 mx-3 sm:mx-auto sm:max-w-sm z-50 rounded-3xl px-5 py-4 flex items-center gap-3"
-        style={{
-          backgroundColor: theme.cardBg,
-          boxShadow: theme.modalShadow,
-        }}
+        style={{ backgroundColor: theme.cardBg, boxShadow: theme.modalShadow }}
       >
         <div
           className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-2xl"
@@ -107,15 +102,10 @@ export default function InstallPrompt() {
   // ─── iOS 手順モーダル ─────────────────────────────
   if (showIOSGuide && !dismissed) {
     return (
-      <div
-        className="fixed inset-0 flex items-end justify-center z-50 p-4"
-        style={{ backgroundColor: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(4px)' }}
-        onClick={dismiss}
-      >
+      <ModalBase onClose={dismiss} align="items-end" padding="p-4">
         <div
           className="w-full max-w-sm rounded-3xl p-6"
           style={{ backgroundColor: theme.cardBg, boxShadow: theme.modalShadow }}
-          onClick={(e) => e.stopPropagation()}
         >
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-bold text-base" style={{ color: theme.textPrimary }}>
@@ -149,11 +139,7 @@ export default function InstallPrompt() {
               {
                 step: '2',
                 icon: <span className="text-base leading-none">＋</span>,
-                text: (
-                  <>
-                    <strong>「ホーム画面に追加」</strong> を選択
-                  </>
-                ),
+                text: <><strong>「ホーム画面に追加」</strong> を選択</>,
               },
               {
                 step: '3',
@@ -183,7 +169,7 @@ export default function InstallPrompt() {
             わかった！
           </button>
         </div>
-      </div>
+      </ModalBase>
     )
   }
 

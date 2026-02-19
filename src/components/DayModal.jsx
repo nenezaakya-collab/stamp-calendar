@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
 import { useTheme } from '../contexts/ThemeContext'
+import ModalBase from './ModalBase'
 
 const WEEKDAYS_JP = ['日', '月', '火', '水', '木', '金', '土']
 
@@ -13,10 +14,6 @@ export default function DayModal({ date, stamps: initialStamps, memo: initialMem
     onUpdate(stamps, memo)
   }, [stamps, memo])
 
-  const handleBackdropClick = (e) => {
-    if (e.target === e.currentTarget) onClose()
-  }
-
   const toggleStamp = (emoji) => {
     setStamps(prev =>
       prev.includes(emoji) ? prev.filter(s => s !== emoji) : [...prev, emoji]
@@ -26,18 +23,10 @@ export default function DayModal({ date, stamps: initialStamps, memo: initialMem
   const dateLabel = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日（${WEEKDAYS_JP[date.getDay()]}）`
 
   return (
-    <div
-      className="fixed inset-0 flex items-end sm:items-center justify-center z-50 p-3 sm:p-4"
-      style={{ backgroundColor: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(4px)' }}
-      onClick={handleBackdropClick}
-    >
+    <ModalBase onClose={onClose} padding="p-3 sm:p-4">
       <div
         className="w-full max-w-md rounded-3xl relative flex flex-col"
-        style={{
-          backgroundColor: theme.cardBg,
-          boxShadow: theme.modalShadow,
-          maxHeight: '92vh',
-        }}
+        style={{ backgroundColor: theme.cardBg, boxShadow: theme.modalShadow, maxHeight: '92vh' }}
       >
         {/* 固定ヘッダー */}
         <div className="flex-shrink-0 px-5 pt-5 pb-4 sm:px-6 sm:pt-6">
@@ -49,7 +38,6 @@ export default function DayModal({ date, stamps: initialStamps, memo: initialMem
             <X size={16} />
           </button>
 
-          {/* 日付 + 選択済みスタンプ */}
           <div className="pr-10">
             <h3 className="text-base sm:text-lg font-bold" style={{ color: theme.textPrimary }}>
               {dateLabel}
@@ -67,70 +55,70 @@ export default function DayModal({ date, stamps: initialStamps, memo: initialMem
         {/* スクロール可能なコンテンツ */}
         <div className="flex-1 overflow-y-auto px-5 pb-2 sm:px-6">
 
-        {/* スタンプ選択パネル */}
-        <div className="mb-5">
-          <p className="text-sm font-medium mb-3" style={{ color: theme.textMuted }}>
-            スタンプを選んでね
-          </p>
-          <div className="grid grid-cols-3 sm:grid-cols-4 gap-4">
-            {stampList.map(({ emoji, label, id }) => {
-              const isSelected = stamps.includes(emoji)
-              return (
-                <button
-                  key={id}
-                  onClick={() => toggleStamp(emoji)}
-                  className="flex flex-col items-center justify-center rounded-2xl py-3 px-2 transition-all active:scale-90"
-                  style={{
-                    backgroundColor: isSelected ? theme.main : theme.bg,
-                    border: `2px solid ${isSelected ? theme.inputFocusBorder : 'transparent'}`,
-                    boxShadow: isSelected ? `0 2px 8px ${theme.main}66` : 'none',
-                    minHeight: '80px',
-                  }}
-                  title={label}
-                >
-                  <span className="text-3xl leading-none">{emoji}</span>
-                  <span
-                    className="leading-snug mt-2 text-center w-full break-all"
+          {/* スタンプ選択パネル */}
+          <div className="mb-5">
+            <p className="text-sm font-medium mb-3" style={{ color: theme.textMuted }}>
+              スタンプを選んでね
+            </p>
+            <div className="grid grid-cols-3 sm:grid-cols-4 gap-4">
+              {stampList.map(({ emoji, label, id }) => {
+                const isSelected = stamps.includes(emoji)
+                return (
+                  <button
+                    key={id}
+                    onClick={() => toggleStamp(emoji)}
+                    className="flex flex-col items-center justify-center rounded-2xl py-3 px-2 transition-all active:scale-90"
                     style={{
-                      fontSize: '11px',
-                      color: isSelected ? theme.textOnMain : theme.textMuted,
+                      backgroundColor: isSelected ? theme.main : theme.bg,
+                      border: `2px solid ${isSelected ? theme.inputFocusBorder : 'transparent'}`,
+                      boxShadow: isSelected ? `0 2px 8px ${theme.main}66` : 'none',
+                      minHeight: '80px',
                     }}
+                    title={label}
                   >
-                    {label}
-                  </span>
-                </button>
-              )
-            })}
+                    <span className="text-3xl leading-none">{emoji}</span>
+                    <span
+                      className="leading-snug mt-2 text-center w-full break-all"
+                      style={{
+                        fontSize: '11px',
+                        color: isSelected ? theme.textOnMain : theme.textMuted,
+                      }}
+                    >
+                      {label}
+                    </span>
+                  </button>
+                )
+              })}
+            </div>
           </div>
-        </div>
 
-        {/* メモ欄 */}
-        <div>
-          <p className="text-sm font-medium mb-2" style={{ color: theme.textMuted }}>
-            メモ
-          </p>
-          <textarea
-            value={memo}
-            onChange={e => setMemo(e.target.value)}
-            placeholder="今日の一言メモ..."
-            maxLength={100}
-            rows={3}
-            className="w-full rounded-2xl px-4 py-3 text-sm resize-none outline-none"
-            style={{
-              backgroundColor: theme.bg,
-              color: theme.textPrimary,
-              border: `2px solid ${theme.inputBorder}`,
-              fontFamily: 'Zen Maru Gothic, sans-serif',
-            }}
-            onFocus={e => e.target.style.border = `2px solid ${theme.inputFocusBorder}`}
-            onBlur={e => e.target.style.border = `2px solid ${theme.inputBorder}`}
-          />
-          <p className="text-right text-xs mt-1" style={{ color: theme.textMuted }}>
-            {memo.length}/100
-          </p>
-        </div>
+          {/* メモ欄 */}
+          <div>
+            <p className="text-sm font-medium mb-2" style={{ color: theme.textMuted }}>
+              メモ
+            </p>
+            <textarea
+              value={memo}
+              onChange={e => setMemo(e.target.value)}
+              placeholder="今日の一言メモ..."
+              maxLength={100}
+              rows={3}
+              className="w-full rounded-2xl px-4 py-3 text-sm resize-none outline-none"
+              style={{
+                backgroundColor: theme.bg,
+                color: theme.textPrimary,
+                border: `2px solid ${theme.inputBorder}`,
+                fontFamily: 'Zen Maru Gothic, sans-serif',
+              }}
+              onFocus={e => e.target.style.border = `2px solid ${theme.inputFocusBorder}`}
+              onBlur={e => e.target.style.border = `2px solid ${theme.inputBorder}`}
+            />
+            <p className="text-right text-xs mt-1" style={{ color: theme.textMuted }}>
+              {memo.length}/100
+            </p>
+          </div>
 
-        </div>{/* end scroll area */}
+        </div>
 
         {/* 固定フッター：完了ボタン */}
         <div className="flex-shrink-0 px-5 pb-6 pt-3 sm:px-6 sm:pb-7">
@@ -147,6 +135,6 @@ export default function DayModal({ date, stamps: initialStamps, memo: initialMem
           </button>
         </div>
       </div>
-    </div>
+    </ModalBase>
   )
 }
