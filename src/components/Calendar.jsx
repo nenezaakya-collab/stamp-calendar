@@ -132,8 +132,9 @@ export default function Calendar({ currentDate, calendarData, getDayKey, onDayCl
           const holidayName = holidayMap[key] ?? null
           const isHoliday = !!holidayName
 
-          const displayStamps = stamps.slice(0, 4)
-          const extraCount = stamps.length > 4 ? stamps.length - 4 : 0
+          // 4枚以下: そのまま表示 / 5枚以上: 3枚 + "…"
+          const showEllipsis = stamps.length >= 5
+          const gridStamps = showEllipsis ? stamps.slice(0, 3) : stamps.slice(0, 4)
 
           const cellBg = isToday ? theme.main : 'transparent'
 
@@ -144,7 +145,8 @@ export default function Calendar({ currentDate, calendarData, getDayKey, onDayCl
               className="relative flex flex-col items-center rounded-2xl pt-2 pb-1 px-0.5 transition-all active:scale-90"
               style={{
                 backgroundColor: cellBg,
-                minHeight: '76px',
+                height: '76px',
+                overflow: 'hidden',
               }}
             >
               {/* 日付番号 */}
@@ -155,17 +157,15 @@ export default function Calendar({ currentDate, calendarData, getDayKey, onDayCl
                 {date.getDate()}
               </span>
 
-              {/* 祝日名（赤・小さい・truncate） */}
+              {/* 祝日名（2行折り返し・省略なし） */}
               {holidayName && (
                 <span
-                  className="w-full text-center leading-tight mt-px overflow-hidden"
+                  className="w-full text-center mt-px"
                   style={{
-                    fontSize: '10px',
+                    fontSize: '8px',
+                    lineHeight: '1.25',
                     color: isToday ? theme.textOnMain : theme.sun,
-                    display: '-webkit-box',
-                    WebkitLineClamp: 1,
-                    WebkitBoxOrient: 'vertical',
-                    overflow: 'hidden',
+                    wordBreak: 'break-all',
                   }}
                   title={holidayName}
                 >
@@ -174,22 +174,25 @@ export default function Calendar({ currentDate, calendarData, getDayKey, onDayCl
               )}
 
               {/* スタンプ（2×2グリッド） */}
-              {displayStamps.length > 0 && (
-                <div className="grid grid-cols-2 gap-0 mt-0.5">
-                  {displayStamps.map((stamp, si) => (
-                    <span key={si} className="text-base leading-none text-center">{stamp}</span>
-                  ))}
-                </div>
-              )}
-
-              {/* +n */}
-              {extraCount > 0 && (
-                <span
-                  className="text-xs leading-none"
-                  style={{ color: isToday ? theme.textOnMain : theme.textMuted }}
+              {gridStamps.length > 0 && (
+                <div
+                  className="w-full mt-0.5"
+                  style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1px' }}
                 >
-                  +{extraCount}
-                </span>
+                  {gridStamps.map((stamp, si) => (
+                    <span
+                      key={si}
+                      className="text-center leading-none"
+                      style={{ fontSize: '12px' }}
+                    >{stamp}</span>
+                  ))}
+                  {showEllipsis && (
+                    <span
+                      className="text-center leading-none"
+                      style={{ fontSize: '10px', color: isToday ? theme.textOnMain : theme.textMuted }}
+                    >…</span>
+                  )}
+                </div>
               )}
 
               {/* メモインジケーター：右上にドット */}

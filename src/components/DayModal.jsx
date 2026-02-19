@@ -32,62 +32,67 @@ export default function DayModal({ date, stamps: initialStamps, memo: initialMem
       onClick={handleBackdropClick}
     >
       <div
-        className="w-full max-w-md rounded-3xl p-5 sm:p-6 relative"
+        className="w-full max-w-md rounded-3xl relative flex flex-col"
         style={{
           backgroundColor: theme.cardBg,
           boxShadow: theme.modalShadow,
           maxHeight: '92vh',
-          overflowY: 'auto',
         }}
       >
-        {/* 閉じるボタン */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-full"
-          style={{ backgroundColor: theme.bg, color: theme.textPrimary }}
-        >
-          <X size={16} />
-        </button>
+        {/* 固定ヘッダー */}
+        <div className="flex-shrink-0 px-5 pt-5 pb-4 sm:px-6 sm:pt-6">
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-full"
+            style={{ backgroundColor: theme.bg, color: theme.textPrimary }}
+          >
+            <X size={16} />
+          </button>
 
-        {/* 日付 + 選択済みスタンプ */}
-        <div className="mb-5 pr-10">
-          <h3 className="text-base sm:text-lg font-bold" style={{ color: theme.textPrimary }}>
-            {dateLabel}
-          </h3>
-          {stamps.length > 0 && (
-            <div className="flex flex-wrap gap-1 mt-2">
-              {stamps.map((s, i) => (
-                <span key={i} className="text-2xl">{s}</span>
-              ))}
-            </div>
-          )}
+          {/* 日付 + 選択済みスタンプ */}
+          <div className="pr-10">
+            <h3 className="text-base sm:text-lg font-bold" style={{ color: theme.textPrimary }}>
+              {dateLabel}
+            </h3>
+            {stamps.length > 0 && (
+              <div className="flex flex-wrap gap-1 mt-2">
+                {stamps.map((s, i) => (
+                  <span key={i} className="text-2xl">{s}</span>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
+
+        {/* スクロール可能なコンテンツ */}
+        <div className="flex-1 overflow-y-auto px-5 pb-2 sm:px-6">
 
         {/* スタンプ選択パネル */}
         <div className="mb-5">
           <p className="text-sm font-medium mb-3" style={{ color: theme.textMuted }}>
             スタンプを選んでね
           </p>
-          <div className="grid grid-cols-5 gap-2">
+          <div className="grid grid-cols-3 sm:grid-cols-4 gap-4">
             {stampList.map(({ emoji, label, id }) => {
               const isSelected = stamps.includes(emoji)
               return (
                 <button
                   key={id}
                   onClick={() => toggleStamp(emoji)}
-                  className="flex flex-col items-center justify-center rounded-2xl py-2 px-1 transition-all active:scale-90"
+                  className="flex flex-col items-center justify-center rounded-2xl py-3 px-2 transition-all active:scale-90"
                   style={{
                     backgroundColor: isSelected ? theme.main : theme.bg,
                     border: `2px solid ${isSelected ? theme.inputFocusBorder : 'transparent'}`,
                     boxShadow: isSelected ? `0 2px 8px ${theme.main}66` : 'none',
+                    minHeight: '80px',
                   }}
                   title={label}
                 >
-                  <span className="text-2xl leading-none">{emoji}</span>
+                  <span className="text-3xl leading-none">{emoji}</span>
                   <span
-                    className="leading-none mt-0.5 text-center"
+                    className="leading-snug mt-2 text-center w-full break-all"
                     style={{
-                      fontSize: '9px',
+                      fontSize: '11px',
                       color: isSelected ? theme.textOnMain : theme.textMuted,
                     }}
                   >
@@ -125,18 +130,22 @@ export default function DayModal({ date, stamps: initialStamps, memo: initialMem
           </p>
         </div>
 
-        {/* 完了ボタン */}
-        <button
-          onClick={onClose}
-          className="w-full mt-4 py-3 rounded-2xl font-bold transition-all active:scale-95"
-          style={{
-            backgroundColor: theme.main,
-            color: theme.textOnMain,
-            boxShadow: `0 4px 16px ${theme.main}80`,
-          }}
-        >
-          完了 ✓
-        </button>
+        </div>{/* end scroll area */}
+
+        {/* 固定フッター：完了ボタン */}
+        <div className="flex-shrink-0 px-5 pb-6 pt-3 sm:px-6 sm:pb-7">
+          <button
+            onClick={onClose}
+            className="w-full py-3 rounded-2xl font-bold transition-all active:scale-95"
+            style={{
+              backgroundColor: theme.main,
+              color: theme.textOnMain,
+              boxShadow: `0 4px 16px ${theme.main}80`,
+            }}
+          >
+            完了 ✓
+          </button>
+        </div>
       </div>
     </div>
   )
