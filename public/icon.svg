@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- 丸角背景 (さくらもちピンク) -->
+  <rect width="512" height="512" rx="120" fill="#FFB7C5"/>
+
+  <!-- カード影 -->
+  <rect x="94" y="136" width="334" height="286" rx="32" fill="#D45A7A" opacity="0.20"/>
+
+  <!-- カード本体 -->
+  <rect x="88" y="128" width="334" height="286" rx="32" fill="#FFFFFF"/>
+
+  <!-- ヘッダーバー (濃いピンク) -->
+  <rect x="88" y="128" width="334" height="90" rx="32" fill="#E84B78"/>
+  <rect x="88" y="178" width="334" height="40" fill="#E84B78"/>
+
+  <!-- バインダーリング (左) -->
+  <rect x="170" y="96" width="28" height="66" rx="14" fill="#5C4A4A"/>
+  <rect x="174" y="100" width="20" height="58" rx="10" fill="#FFB7C5"/>
+
+  <!-- バインダーリング (右) -->
+  <rect x="310" y="96" width="28" height="66" rx="14" fill="#5C4A4A"/>
+  <rect x="314" y="100" width="20" height="58" rx="10" fill="#FFB7C5"/>
+
+  <!-- 月テキスト (白ピル) -->
+  <rect x="212" y="148" width="88" height="16" rx="8" fill="white" opacity="0.88"/>
+
+  <!-- グリッド 4列 × 3行 -->
+  <!-- 行 1 -->
+  <rect x="112" y="244" width="58" height="50" rx="14" fill="#FFEEF2"/>
+  <rect x="182" y="244" width="58" height="50" rx="14" fill="#FFEEF2"/>
+  <rect x="252" y="244" width="58" height="50" rx="14" fill="#FFB7C5"/>
+  <rect x="322" y="244" width="58" height="50" rx="14" fill="#FFEEF2"/>
+
+  <!-- 今日セルのスタンプ (小さい白丸2×2) -->
+  <circle cx="269" cy="263" r="10" fill="white" opacity="0.85"/>
+  <circle cx="293" cy="263" r="10" fill="white" opacity="0.85"/>
+  <circle cx="269" cy="283" r="10" fill="white" opacity="0.85"/>
+  <circle cx="293" cy="283" r="10" fill="white" opacity="0.85"/>
+
+  <!-- 行 2 -->
+  <rect x="112" y="306" width="58" height="50" rx="14" fill="#FFEEF2"/>
+  <rect x="182" y="306" width="58" height="50" rx="14" fill="#C8F0E0"/>
+  <rect x="252" y="306" width="58" height="50" rx="14" fill="#FFEEF2"/>
+  <rect x="322" y="306" width="58" height="50" rx="14" fill="#C8F0E0"/>
+
+  <!-- 行 3 -->
+  <rect x="112" y="368" width="58" height="32" rx="14" fill="#FFEEF2"/>
+  <rect x="182" y="368" width="58" height="32" rx="14" fill="#FFEEF2"/>
+  <rect x="252" y="368" width="58" height="32" rx="14" fill="#C8F0E0"/>
+  <rect x="322" y="368" width="58" height="32" rx="14" fill="#FFEEF2"/>
+</svg>
